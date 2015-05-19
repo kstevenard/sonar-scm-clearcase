@@ -51,6 +51,9 @@ import static org.mockito.Mockito.when;
 public class ClearCaseBlameCommandTest {
 
   @Rule
+  public UTCRule utcRule = new UTCRule();
+
+  @Rule
   public TemporaryFolder temp = new TemporaryFolder();
 
   @Rule
@@ -94,9 +97,9 @@ public class ClearCaseBlameCommandTest {
     when(input.filesToBlame()).thenReturn(Arrays.<InputFile>asList(inputFile));
     new ClearCaseBlameCommand(commandExecutor).blame(input, result);
     verify(result).blameResult(inputFile,
-      Arrays.asList(new BlameLine().date(DateUtils.parseDateTime("2008-10-26T16:26:44+0100")).revision("7").author("Jeremie Lagarde"),
-        new BlameLine().date(DateUtils.parseDateTime("2008-10-26T16:26:44+0100")).revision("7").author("Jeremie Lagarde"),
-        new BlameLine().date(DateUtils.parseDateTime("2008-10-17T10:41:50+0100")).revision("5").author("Evgeny Mandrikov")));
+      Arrays.asList(new BlameLine().date(DateUtils.parseDateTime("2008-10-26T16:26:44+0000")).revision("7").author("Jeremie Lagarde"),
+        new BlameLine().date(DateUtils.parseDateTime("2008-10-26T16:26:44+0000")).revision("7").author("Jeremie Lagarde"),
+        new BlameLine().date(DateUtils.parseDateTime("2008-10-17T11:41:50+0000")).revision("5").author("Evgeny Mandrikov")));
   }
 
   @Test
@@ -125,10 +128,10 @@ public class ClearCaseBlameCommandTest {
     when(input.filesToBlame()).thenReturn(Arrays.<InputFile>asList(inputFile));
     new ClearCaseBlameCommand(commandExecutor).blame(input, result);
     verify(result).blameResult(inputFile,
-      Arrays.asList(new BlameLine().date(DateUtils.parseDateTime("2008-10-26T16:26:44+0100")).revision("7").author("Jeremie Lagarde"),
-        new BlameLine().date(DateUtils.parseDateTime("2008-10-26T16:26:44+0100")).revision("7").author("Jeremie Lagarde"),
-        new BlameLine().date(DateUtils.parseDateTime("2008-10-17T10:41:50+0100")).revision("5").author("Evgeny Mandrikov"),
-        new BlameLine().date(DateUtils.parseDateTime("2008-10-17T10:41:50+0100")).revision("5").author("Evgeny Mandrikov")));
+      Arrays.asList(new BlameLine().date(DateUtils.parseDateTime("2008-10-26T16:26:44+0000")).revision("7").author("Jeremie Lagarde"),
+        new BlameLine().date(DateUtils.parseDateTime("2008-10-26T16:26:44+0000")).revision("7").author("Jeremie Lagarde"),
+        new BlameLine().date(DateUtils.parseDateTime("2008-10-17T11:41:50+0000")).revision("5").author("Evgeny Mandrikov"),
+        new BlameLine().date(DateUtils.parseDateTime("2008-10-17T11:41:50+0000")).revision("5").author("Evgeny Mandrikov")));
   }
 
 }
