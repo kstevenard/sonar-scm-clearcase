@@ -52,7 +52,7 @@
   </ciManagement>
 
   <properties>
-    <sonar.buildVersion>5.0-RC3</sonar.buildVersion>
+    <sonar.buildVersion>5.0</sonar.buildVersion>
     <sonar.pluginName>ClearCase</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.scm.clearcase.ClearCasePlugin</sonar.pluginClass>
   </properties>
