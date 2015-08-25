@@ -2,10 +2,12 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>org.codehaus.sonar-plugins</groupId>
+    <groupId>org.sonarsource.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>18</version>
+    <version>23</version>
+    <relativePath />
   </parent>
+  <groupId>org.sonarsource.scm.clearcase</groupId>
   <artifactId>sonar-scm-clearcase-plugin</artifactId>
   <name>SonarQube :: Plugins :: SCM :: ClearCase</name>
   <version>1.0-SNAPSHOT</version>
@@ -43,12 +45,12 @@
   
   <issueManagement>
     <system>jira</system>
-    <url>http://jira.codehaus.org/browse/SONARSCCLC</url>
+    <url>https://jira.sonarsource.com/projects/SONARSCCLC</url>
   </issueManagement>
   
   <ciManagement>
-    <system>Cloudbees</system>
-    <url>TODO</url>
+    <system>Travis</system>
+    <url>https://travis-ci.org/SonarCommunity/sonar-scm-clearcase</url>
   </ciManagement>
 
   <properties>
@@ -73,15 +75,15 @@
 
     <!-- unit tests -->
     <dependency>
-      <groupId>org.codehaus.sonar</groupId>
-      <artifactId>sonar-testing-harness</artifactId>
-      <version>${sonar.buildVersion}</version>
+      <groupId>junit</groupId>
+      <artifactId>junit</artifactId>
+      <version>4.12</version>
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>org.hamcrest</groupId>
-      <artifactId>hamcrest-all</artifactId>
-      <version>1.3</version>
+      <groupId>org.assertj</groupId>
+      <artifactId>assertj-core</artifactId>
+      <version>2.1.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
