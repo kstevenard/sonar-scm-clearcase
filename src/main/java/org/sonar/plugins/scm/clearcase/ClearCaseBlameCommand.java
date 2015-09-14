@@ -19,6 +19,8 @@
  */
 package org.sonar.plugins.scm.clearcase;
 
+import java.io.File;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
@@ -29,9 +31,6 @@ import org.sonar.api.utils.command.Command;
 import org.sonar.api.utils.command.CommandExecutor;
 import org.sonar.api.utils.command.StreamConsumer;
 import org.sonar.api.utils.command.StringStreamConsumer;
-
-import java.io.File;
-import java.util.List;
 
 public class ClearCaseBlameCommand extends BlameCommand {
 
@@ -64,7 +63,11 @@ public class ClearCaseBlameCommand extends BlameCommand {
 
     int exitCode = execute(cl, consumer, stderr);
     if (exitCode != 0) {
-      throw new IllegalStateException("The ClearCase annotate command [" + cl.toString() + "] failed: " + stderr.getOutput());
+      String stdErr = stderr.getOutput();
+      if (acceptedError(stdErr)) {
+        return;
+      }
+      throw new IllegalStateException("The ClearCase annotate command [" + cl.toString() + "] failed: " + stdErr);
     }
     List<BlameLine> lines = consumer.getLines();
     if (lines.size() == inputFile.lines() - 1) {
@@ -72,6 +75,12 @@ public class ClearCaseBlameCommand extends BlameCommand {
       lines.add(lines.get(lines.size() - 1));
     }
     output.blameResult(inputFile, lines);
+  }
+
+  private boolean acceptedError(String stdErr) {
+    return stdErr != null &&
+      (stdErr.contains("Operation \"annotate\" unavailable for manager")
+        || stdErr.contains("Not a vob object"));
   }
 
   public int execute(Command cl, StreamConsumer consumer, StreamConsumer stderr) {
