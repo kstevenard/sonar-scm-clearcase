@@ -80,7 +80,8 @@ public class ClearCaseBlameCommand extends BlameCommand {
   private boolean acceptedError(String stdErr) {
     return stdErr != null &&
       (stdErr.contains("Operation \"annotate\" unavailable for manager")
-        || stdErr.contains("Not a vob object"));
+        || stdErr.contains("Not a vob object")
+        || stdErr.contains("You may not annotate a checked-out version"));
   }
 
   public int execute(Command cl, StreamConsumer consumer, StreamConsumer stderr) {

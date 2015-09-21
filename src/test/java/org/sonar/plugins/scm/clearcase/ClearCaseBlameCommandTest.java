@@ -136,7 +136,7 @@ public class ClearCaseBlameCommandTest {
 
   // SONARSCCLC-2
   @Test
-  public void dontFailOnCheckedOutFile() throws IOException {
+  public void dontFailOnCheckedOutFileUnreservedUnmaster() throws IOException {
     File source = new File(baseDir, "src/foo.xoo");
     FileUtils.write(source, "sample content");
     DefaultInputFile inputFile = new DefaultInputFile("foo", "src/foo.xoo").setLines(4).setAbsolutePath(new File(baseDir, "src/foo.xoo").getAbsolutePath());
@@ -152,6 +152,33 @@ public class ClearCaseBlameCommandTest {
         StreamConsumer errConsumer = (StreamConsumer) invocation.getArguments()[2];
         errConsumer.consumeLine(
           "cleartool: Error: Operation \"annotate\" unavailable for manager \"_ms_word\" (Operation pathname was: \"C:\\IBM\\RationalSDLC\\ClearCase\\lib\\mgrs\\_ms_word\\annotate\")");
+        return 1;
+      }
+    });
+
+    when(input.filesToBlame()).thenReturn(Arrays.<InputFile>asList(inputFile));
+    new ClearCaseBlameCommand(commandExecutor).blame(input, result);
+    verifyZeroInteractions(result);
+  }
+
+  // SONARSCCLC-2
+  @Test
+  public void dontFailOnCheckedOutFile() throws IOException {
+    File source = new File(baseDir, "src/foo.xoo");
+    FileUtils.write(source, "sample content");
+    DefaultInputFile inputFile = new DefaultInputFile("foo", "src/foo.xoo").setLines(4).setAbsolutePath(new File(baseDir, "src/foo.xoo").getAbsolutePath());
+    fs.add(inputFile);
+
+    BlameOutput result = mock(BlameOutput.class);
+    CommandExecutor commandExecutor = mock(CommandExecutor.class);
+
+    when(commandExecutor.execute(any(Command.class), any(StreamConsumer.class), any(StreamConsumer.class), anyLong())).thenAnswer(new Answer<Integer>() {
+
+      @Override
+      public Integer answer(InvocationOnMock invocation) throws Throwable {
+        StreamConsumer errConsumer = (StreamConsumer) invocation.getArguments()[2];
+        errConsumer.consumeLine(
+          "cleartool: Error: You may not annotate a checked-out version (use no checkouts option): \"src/XXXX.h\"");
         return 1;
       }
     });
