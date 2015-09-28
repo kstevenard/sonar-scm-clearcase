@@ -77,7 +77,7 @@ public class ClearCaseBlameCommand extends BlameCommand {
     output.blameResult(inputFile, lines);
   }
 
-  private boolean acceptedError(String stdErr) {
+  private static boolean acceptedError(String stdErr) {
     return stdErr != null &&
       (stdErr.contains("Operation \"annotate\" unavailable for manager")
         || stdErr.contains("Not a vob object")
@@ -89,7 +89,7 @@ public class ClearCaseBlameCommand extends BlameCommand {
     return commandExecutor.execute(cl, consumer, stderr, -1);
   }
 
-  private Command createCommandLine(File workingDirectory, String filename) {
+  private static Command createCommandLine(File workingDirectory, String filename) {
     Command cl = Command.create("cleartool");
     cl.setDirectory(workingDirectory);
     cl.addArgument("annotate");
