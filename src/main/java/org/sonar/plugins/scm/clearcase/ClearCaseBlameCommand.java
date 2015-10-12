@@ -35,6 +35,11 @@ import org.sonar.api.utils.command.StringStreamConsumer;
 public class ClearCaseBlameCommand extends BlameCommand {
 
   private static final Logger LOG = LoggerFactory.getLogger(ClearCaseBlameCommand.class);
+
+  private static final String[] IGNORED_ERRORS = {"Operation \"annotate\" unavailable for manager",
+    "Not a vob object",
+    "You may not annotate a checked-out version",
+    "Cannot perform operation for derived object"};
   private final CommandExecutor commandExecutor;
 
   public ClearCaseBlameCommand() {
@@ -64,7 +69,7 @@ public class ClearCaseBlameCommand extends BlameCommand {
     int exitCode = execute(cl, consumer, stderr);
     if (exitCode != 0) {
       String stdErr = stderr.getOutput();
-      if (acceptedError(stdErr)) {
+      if (ignoredError(stdErr)) {
         return;
       }
       throw new IllegalStateException("The ClearCase annotate command [" + cl.toString() + "] failed: " + stdErr);
@@ -77,11 +82,16 @@ public class ClearCaseBlameCommand extends BlameCommand {
     output.blameResult(inputFile, lines);
   }
 
-  private static boolean acceptedError(String stdErr) {
-    return stdErr != null &&
-      (stdErr.contains("Operation \"annotate\" unavailable for manager")
-        || stdErr.contains("Not a vob object")
-        || stdErr.contains("You may not annotate a checked-out version"));
+  private static boolean ignoredError(String stdErr) {
+    if (stdErr == null) {
+      return false;
+    }
+    for (String msg : IGNORED_ERRORS) {
+      if (stdErr.contains(msg)) {
+        return true;
+      }
+    }
+    return false;
   }
 
   public int execute(Command cl, StreamConsumer consumer, StreamConsumer stderr) {

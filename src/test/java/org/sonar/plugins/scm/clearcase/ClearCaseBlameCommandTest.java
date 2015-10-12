@@ -244,4 +244,30 @@ public class ClearCaseBlameCommandTest {
     new ClearCaseBlameCommand(commandExecutor).blame(input, result);
   }
 
+  // SONARSCCLC-3
+  @Test
+  public void dontFailOnDerivedFile() throws IOException {
+    File source = new File(baseDir, "src/foo.xoo");
+    FileUtils.write(source, "sample content");
+    DefaultInputFile inputFile = new DefaultInputFile("foo", "src/foo.xoo").setLines(4).setAbsolutePath(new File(baseDir, "src/foo.xoo").getAbsolutePath());
+    fs.add(inputFile);
+
+    BlameOutput result = mock(BlameOutput.class);
+    CommandExecutor commandExecutor = mock(CommandExecutor.class);
+
+    when(commandExecutor.execute(any(Command.class), any(StreamConsumer.class), any(StreamConsumer.class), anyLong())).thenAnswer(new Answer<Integer>() {
+
+      @Override
+      public Integer answer(InvocationOnMock invocation) throws Throwable {
+        StreamConsumer errConsumer = (StreamConsumer) invocation.getArguments()[2];
+        errConsumer.consumeLine("cleartool: Error: Cannot perform operation for derived object: \"Debug/version.h\".");
+        return 1;
+      }
+    });
+
+    when(input.filesToBlame()).thenReturn(Arrays.<InputFile>asList(inputFile));
+    new ClearCaseBlameCommand(commandExecutor).blame(input, result);
+    verifyZeroInteractions(result);
+  }
+
 }
