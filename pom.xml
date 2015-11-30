@@ -38,9 +38,9 @@
   </developers>
 
   <scm>
-    <connection>scm:git:git@github.com:SonarCommunity/sonar-scm-clearcase.git</connection>
-    <developerConnection>scm:git:git@github.com:SonarCommunity/sonar-scm-clearcase.git</developerConnection>
-    <url>https://github.com/SonarCommunity/sonar-scm-clearcase</url>
+    <connection>scm:git:git@github.com:SonarSource/sonar-scm-clearcase.git</connection>
+    <developerConnection>scm:git:git@github.com:SonarSource/sonar-scm-clearcase.git</developerConnection>
+    <url>https://github.com/SonarSource/sonar-scm-clearcase</url>
     <tag>HEAD</tag>
   </scm>
   
