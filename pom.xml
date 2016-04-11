@@ -4,8 +4,7 @@
   <parent>
     <groupId>org.sonarsource.parent</groupId>
     <artifactId>parent</artifactId>
-    <version>23</version>
-    <relativePath />
+    <version>31</version>
   </parent>
   <groupId>org.sonarsource.scm.clearcase</groupId>
   <artifactId>sonar-scm-clearcase-plugin</artifactId>
@@ -58,6 +57,7 @@
     <sonar.buildVersion>5.0</sonar.buildVersion>
     <sonar.pluginName>ClearCase</sonar.pluginName>
     <sonar.pluginClass>org.sonar.plugins.scm.clearcase.ClearCasePlugin</sonar.pluginClass>
+    <gitRepositoryName>sonar-scm-clearcase</gitRepositoryName>
   </properties>
 
   <dependencies>
@@ -101,12 +101,4 @@
     </dependency>
   </dependencies>
 
-  <build>
-    <plugins>
-      <plugin>
-        <groupId>org.codehaus.sonar</groupId>
-        <artifactId>sonar-packaging-maven-plugin</artifactId>
-      </plugin>
-    </plugins>
-  </build>
 </project>
