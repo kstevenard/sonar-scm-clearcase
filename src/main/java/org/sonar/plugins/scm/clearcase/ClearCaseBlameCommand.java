@@ -20,7 +20,11 @@
 package org.sonar.plugins.scm.clearcase;
 
 import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.List;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.sonar.api.batch.fs.FileSystem;
@@ -62,7 +66,24 @@ public class ClearCaseBlameCommand extends BlameCommand {
 
   private void blame(FileSystem fs, InputFile inputFile, BlameOutput output) {
     String filename = inputFile.relativePath();
-    Command cl = createCommandLine(fs.baseDir(), filename);
+    File f = inputFile.file();
+    Command cl = null;
+    if (Files.isSymbolicLink(f.toPath())) {
+      try {
+        Path p = f.toPath().toRealPath();
+        File workingDirectory = p.getParent().toFile();
+        String file = p.getFileName().toString(); 
+        cl = createCommandLine(workingDirectory, file);
+        LOG.debug(filename +  " is a symlink to: " + workingDirectory.toString()+"/"+file);
+      } catch (IOException e) {
+        LOG.warn(e.getMessage(), e);
+      }
+    } else {
+      cl = createCommandLine(fs.baseDir(), filename);
+    }
+    if ( cl == null ) {
+      throw new IllegalStateException("Unable to create command line for " + fs.baseDir() + filename);
+    }
     ClearCaseBlameConsumer consumer = new ClearCaseBlameConsumer(filename);
     StringStreamConsumer stderr = new StringStreamConsumer();
 
